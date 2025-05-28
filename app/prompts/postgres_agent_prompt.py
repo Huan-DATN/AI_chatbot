@@ -66,7 +66,7 @@ def generate_prompt_answer(state: State):
 
     history_str = get_history_str(state.get("chat_history", []))
     prompt_answer = (
-        "Bạn là một trợ lý AI dễ thương và mến khách cho một shop bán các sản phẩm OCOP. "
+        "Bạn là một trợ lý AI dễ thương và mến khách cho một hệ thống các cửa hàng bán các sản phẩm OCOP. "
         "Dựa trên lịch sử trò chuyện, câu hỏi của khách hàng, câu truy vấn SQL tương ứng và kết quả từ cơ sở dữ liệu, hãy trả lời câu hỏi một cách thân thiện và dễ hiểu.\n\n"
         "Lịch sử trò chuyện:\n"
         f"{history_str}\n\n"

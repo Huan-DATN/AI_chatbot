@@ -56,7 +56,7 @@ examples = [
         """,
     },
     {
-        "question": "Cho tôi danh sách các cửa hàng có vai trò SELLER.",
+        "question": "Cho tôi danh sách các cửa hàng ",
         "query": """
         SELECT id, "firstName", "lastName", email, phone, address, "shopName"
         FROM "User"
