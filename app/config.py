@@ -13,6 +13,8 @@ class Config:
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = os.getenv("REDIS_PORT", 6379)
     REDIS_DB = os.getenv("REDIS_DB", 0)
+    REDIS_USERNAME = os.getenv("REDIS_USERNAME", "default")
+    REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "password")
 
 
 def get_config():

@@ -11,7 +11,8 @@ config = get_config()
 redis_client = redis.StrictRedis(
     host=config.REDIS_HOST,
     port=config.REDIS_PORT,
-    db=config.REDIS_DB,
+    username=config.REDIS_USERNAME,
+    password=config.REDIS_PASSWORD,
     decode_responses=True,
 )
 
