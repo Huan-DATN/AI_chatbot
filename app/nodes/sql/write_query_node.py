@@ -18,7 +18,7 @@ example_selector = SemanticSimilarityExampleSelector.from_examples(
     examples,
     HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2"),
     FAISS,
-    k=3,
+    k=5,
     input_keys=["question"],
 )
 
@@ -32,17 +32,28 @@ prompt_few_shot = FewShotPromptTemplate(
     suffix="""
     History context:
     {chat_history}
+
     User question: {question}
+
+    Think step by step:
+    1. Identify the tables and columns needed to answer this question
+    2. Determine the appropriate joins between tables
+    3. Consider any filtering conditions needed
+    4. Decide if aggregation, grouping, or ordering is required
+    5. Ensure all table and column names are enclosed in double quotes
+
+    Now, generate a syntactically correct PostgreSQL query to answer the question:
     SQL query:
     """,
-    input_variables=["question", "top_k", "table_info"],
+    input_variables=["question", "top_k", "table_info", "chat_history"],
 )
 
 
 def write_query(state: State):
-    """Generate SQL query to fetch information."""
+    """Generate SQL query to fetch information using enhanced LLM prompting."""
 
     try:
+
         history_str = get_history_str(state.get("chat_history", []))
         prompt = prompt_few_shot.invoke(
             {
@@ -57,10 +68,7 @@ def write_query(state: State):
         ).with_structured_output(QueryOutput)
         result = structured_llm.invoke(prompt)
 
-        return {
-            "query": result["query"],
-            "chat_history": state["chat_history"],
-            "session_id": state["session_id"],
-        }
+        return {"query": result["query"]}
     except Exception as e:
         print(f"Error in write_query: {e}")
+        return {"query": "SELECT 1;"}

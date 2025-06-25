@@ -70,8 +70,16 @@ def generate_prompt_answer(state: State):
         "Dựa trên lịch sử trò chuyện, câu hỏi của khách hàng, câu truy vấn SQL tương ứng và kết quả từ cơ sở dữ liệu, hãy trả lời câu hỏi một cách thân thiện và dễ hiểu.\n\n"
         "Lịch sử trò chuyện:\n"
         f"{history_str}\n\n"
-        f"Câu truy vấn SQL: {state['query']}\n"
-        f"Kết quả từ SQL: {state['result']}"
+        f"Câu hỏi của khách hàng: {state['question']}\n\n"
+        f"Câu truy vấn SQL: {state['query']}\n\n"
+        f"Kết quả từ SQL: {state['result']}\n\n"
+        "Hướng dẫn:\n"
+        "1. Phân tích kết quả truy vấn SQL và trả lời câu hỏi của khách hàng một cách đầy đủ và chính xác.\n"
+        "2. Nếu kết quả truy vấn không có dữ liệu, hãy thông báo một cách lịch sự rằng không tìm thấy thông tin phù hợp.\n"
+        "3. Nếu kết quả truy vấn có nhiều dữ liệu, hãy tóm tắt một cách có tổ chức và dễ hiểu.\n"
+        "4. Sử dụng ngôn ngữ thân thiện, tự nhiên và dễ hiểu, phù hợp với khách hàng quan tâm đến sản phẩm OCOP.\n"
+        "5. Nếu có thể, hãy đề xuất các sản phẩm hoặc thông tin liên quan mà khách hàng có thể quan tâm.\n"
+        "6. Trả lời bằng tiếng Việt và giữ giọng điệu nhiệt tình, hữu ích.\n"
     )
 
     return prompt_answer

@@ -10,7 +10,6 @@ def get_bot_response(message: str, session_id):
     Nhận câu hỏi từ user, chạy graph, và trả về câu trả lời cuối cùng.
     """
     try:
-
         return chat(message, session_id)
     except Exception as e:
         print(f"Error in get_bot_response: {e}")
@@ -18,7 +17,7 @@ def get_bot_response(message: str, session_id):
 
 
 def chat(question: str, session_id: str = None):
-
+    """Process a chat message and return the response."""
     if session_id is None:
         session_id = str(uuid.uuid4())
 
@@ -30,14 +29,20 @@ def chat(question: str, session_id: str = None):
         for msg in chat_history_store.messages
     ]
 
-    # Invoke the graph with the question and history
-    result = graph.invoke(
-        {
-            "question": question,
-            "chat_history": messages,
-            "session_id": session_id,
-        }
-    )
+    # Create the initial state with all required fields
+    initial_state = {
+        "question": question,
+        "query": "",
+        "result": "",
+        "answer": "",
+        "chat_history": messages,
+        "session_id": session_id,
+        "intent": None,
+        "faq_results": []
+    }
+
+    # Invoke the graph with the initial state
+    result = graph.invoke(initial_state)
 
     # Add the bot's response to history
     chat_history_store.add_ai_message(result["answer"])

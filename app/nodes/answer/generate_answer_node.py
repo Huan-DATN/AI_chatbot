@@ -20,6 +20,10 @@ redis_client = redis.StrictRedis(
 def generate_answer(state: State):
     """Answer question using retrieved information as context."""
     try:
+        # Skip if this is a FAQ path and we already have an answer
+        if state.get("intent") == "faq" and state.get("faq_results"):
+            return state
+
         stream = ChatGoogleGenerativeAI(
             model=get_model(),
             temperature=0.7,
@@ -33,7 +37,8 @@ def generate_answer(state: State):
                 full_response += chunk.content
 
         redis_client.publish(state["session_id"], "DONE")
-        print(full_response)
+        print("answer: ", full_response)
+
         return {"answer": full_response}
     except Exception as e:
         print("Error generating answer:", e)

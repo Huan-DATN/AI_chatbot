@@ -12,6 +12,7 @@ def chat():
 
     data = request.get_json()
     session_id = data.get("session_id", None)
+    print("session_id: ", session_id)
 
     if not user_message:
         return jsonify({"error": "Message is required."}), 400

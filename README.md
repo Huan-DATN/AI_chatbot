@@ -1,84 +1,81 @@
+# AI Chatbot Service
 
-# 🐍 Flask Project - Setup & Run Guide
+This service provides an AI-powered chatbot with two main capabilities:
 
-Hướng dẫn từng bước để khởi tạo, cấu hình và chạy dự án Flask trong môi trường local.
+1. FAQ answering using vector search and LLM
+2. Database querying using SQL generation
 
----
+## Architecture
 
-## ✅ Yêu cầu hệ thống
+The system uses a graph-based architecture with LangGraph to process user questions:
 
-- Python 3.8 trở lên
-- pip
-- Git (nếu clone dự án từ Git)
+1. **Intent Detection**: Determines if the question is a FAQ or requires database access
+2. **FAQ Processing**:
+   - Retrieves relevant FAQ entries using vector similarity search
+   - Generates answers based on retrieved FAQ entries
+3. **SQL Processing**:
+   - Generates SQL queries based on the user's question
+   - Validates and executes the queries
+   - Generates a natural language answer from the query results
 
----
+## Setup
 
-## 🚀 Bắt đầu
+1. Create a virtual environment:
 
-### 1. Tạo virtual environment (venv)
+   ```
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-**Linux/macOS:**
+2. Install dependencies:
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
+   ```
+   pip install -r requirements.txt
+   ```
+
+3. Create a `.env` file with the following variables:
+   ```
+   GEMINI_API_KEY=your_gemini_api_key
+   GEMINI_MODEL=gemini-2.0-flash
+   DB_URL=postgresql+psycopg2://username:password@host:port/database
+   REDIS_HOST=localhost
+   REDIS_PORT=6379
+   REDIS_DB=0
+   REDIS_USERNAME=default
+   REDIS_PASSWORD=password
+   ```
+
+## Running the Service
+
+Start the service with:
+
 ```
-
-**Windows:**
-
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
----
-
-### 2. Cài đặt các thư viện cần thiết
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-### 3. Tạo file `.env` và cấu hình biến môi trường
-
-Tạo một file tên là `.env` trong thư mục gốc của dự án và thêm các dòng sau:
-
-```env
-# Database
-DB_URL=
-
-# Gemini API
-GEMINI_API_KEY=
-GEMINI_MODEL=
-
-# Redis
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_DB=0
-```
-
-> 💡 Gợi ý: Điền các thông tin kết nối thực tế vào những biến môi trường này. Không commit file `.env` lên Git để tránh lộ thông tin nhạy cảm.
-
----
-
-### 4. Khởi động ứng dụng
-
-```bash
 python run.py
 ```
 
-Mặc định, ứng dụng sẽ chạy ở địa chỉ `http://localhost:5000`.
+The service will be available at http://localhost:5000.
 
-## 📝 Ghi chú
+## API Endpoints
 
-- Luôn kích hoạt virtual environment trước khi chạy hoặc phát triển ứng dụng.
-- Sử dụng `.env` để quản lý thông tin nhạy cảm một cách an toàn.
-- Đảm bảo Redis và các dịch vụ liên quan đã được khởi chạy nếu ứng dụng cần.
+### Chatbot
 
----
+- **POST /api/chat**
+  - Request body: `{"message": "your question", "session_id": "optional_session_id"}`
+  - Response: `{"response": {"answer": "bot's answer", "session_id": "session_id"}}`
 
-## 📬 Liên hệ
+### FAQ Management
 
-Nếu bạn gặp vấn đề khi khởi động dự án, hãy kiểm tra kỹ các bước hoặc liên hệ với nhóm phát triển để được hỗ trợ.
+- **GET /api/faq/**
+
+  - Get all FAQs
+  - Response: List of FAQ items
+
+- **POST /api/faq/**
+
+  - Add a new FAQ
+  - Request body: `{"question": "FAQ question", "answer": "FAQ answer", "category": "optional category", "tags": ["optional", "tags"]}`
+  - Response: Added FAQ item
+
+- **GET /api/faq/search?q=search_query**
+  - Search FAQs by query
+  - Response: List of matching FAQ items with similarity scores

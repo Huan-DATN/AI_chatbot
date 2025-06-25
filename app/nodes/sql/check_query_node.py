@@ -4,7 +4,8 @@ from app.clients.genimi_client import get_model
 from app.models.state import QueryOutput, State
 
 
-def check_query(state: State) -> str:
+def check_query(state: State) -> dict:
+
     structured_llm = ChatGoogleGenerativeAI(
         model=get_model(), temperature=0.1
     ).with_structured_output(QueryOutput)

@@ -1,7 +1,7 @@
 from typing_extensions import TypedDict
 from typing_extensions import Annotated
-from typing import List
-
+from typing import List, Optional, Dict, Any
+import operator
 
 class Message(TypedDict):
     role: str  # "user" hoặc "bot"
@@ -13,14 +13,22 @@ class State(TypedDict):
     query: str
     result: str
     answer: str
-    chat_history: List[Message]
-    session_id: str  # Add session_id to track the conversation
+    chat_history: Annotated[List[Message], "Chat history"]
+    session_id: str
+    intent: Optional[str]
+    faq_results: Optional[List[Dict[str, Any]]]
 
 
 class QueryOutput(TypedDict):
     """Generated SQL query."""
 
     query: Annotated[str, ..., "Syntactically valid SQL query."]
+
+
+class IntentOutput(TypedDict):
+    """Detected intent."""
+
+    intent: Annotated[str, ..., "Intent of the question (faq or sql)"]
 
 
 examples = [

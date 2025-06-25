@@ -15,6 +15,11 @@ class Config:
     REDIS_DB = os.getenv("REDIS_DB", 0)
     REDIS_USERNAME = os.getenv("REDIS_USERNAME", "default")
     REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "password")
+    # Embedding model configuration
+    EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+    # FAQ configuration
+    FAQ_SIMILARITY_THRESHOLD = float(os.getenv("FAQ_SIMILARITY_THRESHOLD", "0.7"))
+    FAQ_TOP_K = int(os.getenv("FAQ_TOP_K", "3"))
 
 
 def get_config():
